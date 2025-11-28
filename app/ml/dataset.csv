@@ -1,9 +1,62 @@
 text,label
-"El sistema no permite iniciar sesión",0
-"La plataforma está caida",0
-"No funciona el boton de enviar",0
-"Agregar nueva funcionalidad para reportes",1
-"Me gustaría un nuevo módulo de informes",1
-"Necesitamos cambiar la vista principal",1
-"El sistema muestra un error al guardar",0
-"Actualizar interfaz para nueva versión",1
+"El sistema no permite iniciar sesión en la plataforma",0
+"No funciona el botón de enviar en el formulario",0
+"La plataforma está caída desde hace una hora",0
+"Error 500 al intentar generar el reporte de ventas",0
+"El módulo de usuarios no carga correctamente",0
+"La aplicación se cierra de manera inesperada",0
+"Los campos del formulario no validan la información",0
+"El sistema muestra una pantalla en blanco al guardar",0
+"No se pueden descargar los archivos adjuntos",0
+"La autenticación falla cuando se usa contraseña temporal",0
+"Error crítico al conectarse con la base de datos",0
+"El menú lateral desaparece después de actualizar",0
+"La vista de productos tarda demasiado en cargar",0
+"Los permisos de usuario no se aplican correctamente",0
+"No se pueden generar facturas desde el módulo principal",0
+"Se produce bloqueo al intentar actualizar un registro",0
+"Los reportes PDF se generan vacíos",0
+"Aparece un error de validación sin explicación",0
+"Los datos no se guardan después de presionar aceptar",0
+"La sincronización con el servidor no funciona",0
+"El sistema muestra error de tiempo de espera",0
+"Las notificaciones no están llegando a los usuarios",0
+"Los registros duplicados no se eliminan bien",0
+"El botón de eliminar no responde",0
+"Las gráficas no se visualizan correctamente",0
+"Se pierde la conexión en medio del proceso",0
+"La carga de imágenes falla constantemente",0
+"El módulo de pagos rechaza transacciones válidas",0
+"La búsqueda no devuelve resultados correctos",0
+"El sistema está funcionando demasiado lento hoy",0
+
+"Agregar nueva funcionalidad para reportes avanzados",1
+"Necesitamos un nuevo módulo de informes financieros",1
+"Se solicita incluir exportación a Excel",1
+"Actualizar la interfaz para mejorar usabilidad",1
+"Agregar filtros adicionales en el reporte mensual",1
+"Me gustaría un dashboard con indicadores gráficos",1
+"Implementar nuevas opciones de personalización",1
+"Agregar compatibilidad con el nuevo API externo",1
+"Se requiere módulo para gestionar inventarios",1
+"Crear una vista de resumen para gerencia",1
+"Implementar doble autenticación para seguridad",1
+"Agregar opción para descargar reportes en CSV",1
+"Crear funcionalidad para automatizar alertas",1
+"Agregar historial de cambios por usuario",1
+"Necesitamos integrar el sistema con facturación electrónica",1
+"Agregar soporte para varios idiomas",1
+"Implementar una vista de seguimiento en tiempo real",1
+"Mejorar los mensajes de confirmación para el usuario",1
+"Incluir módulo de análisis de datos",1
+"Agregar búsqueda avanzada con filtros dinámicos",1
+"Implementar sistema de notificaciones push",1
+"Crear funcionalidad para programar reportes",1
+"Integrar módulo de auditoría",1
+"Actualizar diseño acorde a la nueva imagen corporativa",1
+"Agregar vista móvil optimizada",1
+"Implementar control de versiones de documentos",1
+"Crear sección de favoritos para accesos rápidos",1
+"Permitir importar datos desde archivos Excel",1
+"Añadir sección de capacitación interactiva",1
+"Mejorar la gestión de usuarios mediante roles avanzados",1

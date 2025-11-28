@@ -68,13 +68,16 @@ FASTAPI
 
 
 📦 Tecnologías Utilizadas
-Python 3
-FastAPI
-TensorFlow / Keras
-Pandas / NumPy
-MongoDB
-Joblib
-Docker (próxima integración)
+fastapi
+uvicorn
+pydantic
+pymongo
+python-dotenv
+pandas
+numpy
+joblib
+tensorflow==2.12.1
+
 
 
 🎯 Resumen de Archivos y Carpetas
