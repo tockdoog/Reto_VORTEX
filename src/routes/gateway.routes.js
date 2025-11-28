@@ -29,6 +29,54 @@ routerGateway.get("/security", verifyToken, async (req, res) => {
   }
 });
 
+// Ruta protegida: solo usuarios autenticados pueden invocar microservicios
+routerGateway.post("/insertarticket", verifyToken, async (req, res) => {
+  try {
+    // Captura el body del cliente
+    const data = req.body;
+
+    const response = await callInternalService(
+      process.env.DATA_SERVICE_HOST + "/api/data/tickets",
+      "POST",
+      data
+    );
+
+    res.json({
+      gateway: "OK",
+      fromMicroservice: response.data
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: "Error al llamar al microservicio",
+      details: error.response?.data || error.message
+    });
+  }
+});
+
+// Ruta protegida: solo usuarios autenticados pueden invocar microservicios
+routerGateway.get("/consultarticket/:id", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params; // <-- obtener ID
+
+    const response = await callInternalService(
+      `${process.env.DATA_SERVICE_HOST}/api/data/tickets/${id}`,
+      "GET"
+    );
+
+    res.json({
+      gateway: "OK",
+      fromMicroservice: response.data
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: "Error al llamar al microservicio",
+      details: error.response?.data || error.message
+    });
+  }
+});
+
 // Ruta pública para probar (SIN llamar microservicio todavía)
 routerGateway.post("/tickets/ingresar", verifyToken, recibirTicket);
 
