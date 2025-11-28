@@ -2,45 +2,66 @@
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+from datetime import datetime
 from app.core.model_loader import load_model_and_tokenizer, prepare_text
 from app.core.mongo import save_prediction
-import numpy as np
 
 router = APIRouter()
 
+# ===============================
+# Nuevo modelo de ticket oficial
+# ===============================
 class Ticket(BaseModel):
-    text: str
+    ticket_id: str
+    cliente: str
+    proyecto: str
+    fecha: str
+    contacto_nombre: str
+    contacto_correo: str
+    contacto_telefono: str
+    asunto: str
+    descripcion: str
+
 
 @router.post("/predict")
 def classify_ticket(ticket: Ticket):
 
-    # 1️ Cargar modelo y tokenizer
+    # 1. Construir texto que analizará la IA
+    texto_completo = f"{ticket.asunto}. {ticket.descripcion}"
+
+    # 2. Cargar modelo
     model, tokenizer = load_model_and_tokenizer()
+    padded_text = prepare_text(texto_completo)
 
-    # 2️ Preprocesar texto
-    padded_text = prepare_text(ticket.text)
-
-    # 3️ Hacer predicción
+    # 3. Predicción
     prediction = float(model.predict(padded_text)[0][0])
     label = "evolutivo" if prediction >= 0.5 else "correctivo"
 
-    # 4️ Resultado base
-    result = {
+    # 4. Resultado para guardar en MongoDB
+    mongo_doc = {
+        "ticket_id": ticket.ticket_id,
+        "cliente": ticket.cliente,
+        "proyecto": ticket.proyecto,
+        "fecha": ticket.fecha,
+        "contacto_nombre": ticket.contacto_nombre,
+        "contacto_correo": ticket.contacto_correo,
+        "contacto_telefono": ticket.contacto_telefono,
+        "asunto": ticket.asunto,
+        "descripcion": ticket.descripcion,
+        "analizado_texto": texto_completo,
         "label": label,
         "confidence": round(prediction, 4),
-        "input_text": ticket.text
+        "timestamp": datetime.utcnow().isoformat()
     }
 
-    print("➡️ Enviando resultado a Mongo:", result)
+    print("➡️ Enviando documento a Mongo:", mongo_doc)
 
-    # 5️ Guardar en Mongo
-    save_prediction(result)
+    # 5. Guardar en Mongo
+    save_prediction(mongo_doc)
 
-    # crear una respuesta limpia sin `_id`
-    response = {
-        "label": result["label"],
-        "confidence": result["confidence"],
-        "input_text": result["input_text"]
+    # 6. Respuesta al cliente (limpia)
+    return {
+        "ticket_id": ticket.ticket_id,
+        "label": label,
+        "confidence": round(prediction, 4)
     }
-
-    return response

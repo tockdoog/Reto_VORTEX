@@ -3,7 +3,8 @@ uvicorn
 pydantic
 pymongo
 python-dotenv
-tensorflow
 pandas
 numpy
 joblib
+tensorflow==2.12.1
+
