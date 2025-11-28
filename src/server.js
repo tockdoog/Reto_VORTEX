@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import routes from "./routes/index.js";
-import { verifyInternalToken } from "./middleware/internalAuth.js";
+import { generalLimiter } from "../config/rateLimit.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -11,6 +11,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
+
+//  Aplicar limitador a TODAS las rutas del gateway
+app.use(generalLimiter);
 
 // Rutas
 app.use("/", routes);
