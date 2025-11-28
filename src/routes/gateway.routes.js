@@ -77,6 +77,29 @@ routerGateway.get("/consultarticket/:id", verifyToken, async (req, res) => {
   }
 });
 
+// Ruta protegida: solo usuarios autenticados pueden invocar microservicios
+routerGateway.get("/analisis", verifyToken, async (req, res) => {
+  try {
+
+    const response = await callInternalService(
+      `${process.env.DATA_SERVICE_HOST}/api/data/analytics`,
+      "GET"
+    );
+
+    res.json({
+      gateway: "OK",
+      fromMicroservice: response.data
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: "Error al llamar al microservicio",
+      details: error.response?.data || error.message
+    });
+  }
+});
+
+
 // Ruta pública para probar (SIN llamar microservicio todavía)
 routerGateway.post("/tickets/ingresar", verifyToken, recibirTicket);
 
