@@ -3,9 +3,11 @@
 
 
 from fastapi import APIRouter
+from app.ml.trainer import train_model
 
 router = APIRouter()
 
 @router.post("/train")
-async def train_model():
-    return {"status": "training_not_implemented_yet"}
+def train():
+    result = train_model()
+    return result

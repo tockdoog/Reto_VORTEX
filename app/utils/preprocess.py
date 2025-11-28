@@ -1,3 +1,6 @@
+# ➡️ Limpia el texto antes de enviarlo al modelo
+
+
 import re
 
 def clean_text(text: str):

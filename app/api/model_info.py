@@ -13,3 +13,4 @@ async def model_info():
         "version": "1.0.0",
         "description": "Este microservicio clasificará tickets en Correctivo/Evolutivo"
     }
+

@@ -1,3 +1,9 @@
+# ➡️ Conexión a MongoDB
+# Se conecta a la base
+# Crea colección predictions
+# Función para guardar predicciones
+
+
 from pymongo import MongoClient
 from app.core.config import MONGO_URI
 
