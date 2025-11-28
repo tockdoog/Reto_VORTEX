@@ -6,5 +6,5 @@ python-dotenv
 pandas
 numpy
 joblib
-tensorflow==2.12.1
+tensorflow
 
