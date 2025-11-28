@@ -1,10 +1,5 @@
 import { generateToken } from "../utils/token.util.js";
-
-// Usuarios de ejemplo (puedes sustituir con DB real)
-const mockUsers = [
-  { id: 1, username: "admin", password: "123456", role: "admin" },
-  { id: 2, username: "luis", password: "abc123", role: "user" }
-];
+import users from "../data/users.json" with  { type: "json" };
 
 export const login = (req, res) => {
   const { username, password } = req.body;
@@ -12,7 +7,7 @@ export const login = (req, res) => {
   if (!username || !password)
     return res.status(400).json({ error: "Usuario y contraseña requeridos" });
 
-  const user = mockUsers.find(
+  const user = users.find(
     (u) => u.username === username && u.password === password
   );
 

@@ -1,19 +1,29 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/auth.middleware.js";
+import { callInternalService } from "../utils/internal-call.js"
 
 const routerGateway = Router();
 
-// Ruta libre
-routerGateway.get("/", (req, res) => {
-  res.json({ respuesta: "API Gateway funcionando" });
-});
+// Ruta protegida: solo usuarios autenticados pueden invocar microservicios
+routerGateway.get("/security", verifyToken, async (req, res) => {
+  try {
+    
+    const response = await callInternalService(
+      "http://localhost:4000",
+      "GET"
+    );
 
-// Rutas protegidas
-routerGateway.get("/servicios", verifyToken, (req, res) => {
-  res.json({
-    mensaje: "Acceso permitido",
-    usuario: req.user
-  });
+    res.json({
+      gateway: "OK",
+      fromMicroservice: response.data
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: "Error al llamar al microservicio",
+      details: error.response?.data || error.message
+    });
+  }
 });
 
 export default routerGateway;

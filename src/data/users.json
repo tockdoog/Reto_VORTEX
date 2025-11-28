@@ -1,0 +1,22 @@
+[
+  { "id": 1, "username": "admin", "password": "123456", "role": "admin" },
+  { "id": 2, "username": "luis", "password": "abc123", "role": "user" },
+  { "id": 3, "username": "maria", "password": "pass123", "role": "user" },
+  { "id": 4, "username": "jose", "password": "qwerty", "role": "user" },
+  { "id": 5, "username": "carlos", "password": "123abc", "role": "user" },
+  { "id": 6, "username": "ana", "password": "clave456", "role": "user" },
+  { "id": 7, "username": "pedro", "password": "user789", "role": "user" },
+  { "id": 8, "username": "sofia", "password": "sof123", "role": "user" },
+  { "id": 9, "username": "laura", "password": "laura321", "role": "user" },
+  { "id": 10, "username": "fernando", "password": "fer123", "role": "user" },
+  { "id": 11, "username": "raul", "password": "raul987", "role": "user" },
+  { "id": 12, "username": "diana", "password": "diana654", "role": "user" },
+  { "id": 13, "username": "jorge", "password": "jorge456", "role": "user" },
+  { "id": 14, "username": "monica", "password": "moni111", "role": "user" },
+  { "id": 15, "username": "andres", "password": "and123", "role": "user" },
+  { "id": 16, "username": "valeria", "password": "vale222", "role": "user" },
+  { "id": 17, "username": "ricardo", "password": "ric300", "role": "user" },
+  { "id": 18, "username": "patricia", "password": "pat777", "role": "user" },
+  { "id": 19, "username": "esteban", "password": "est999", "role": "user" },
+  { "id": 20, "username": "camila", "password": "cam444", "role": "user" }
+]
