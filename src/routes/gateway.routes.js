@@ -99,8 +99,111 @@ routerGateway.get("/analisis", verifyToken, async (req, res) => {
   }
 });
 
+// Ruta protegida: solo usuarios autenticados pueden invocar microservicios
+routerGateway.post("/generarrecomendacion", verifyToken, async (req, res) => {
+  try {
+    const { tipo, sentimiento, churn, insights } = req.body;
+
+    if (!tipo || sentimiento === undefined || churn === undefined) {
+      return res.status(400).json({
+        error: "Faltan datos obligatorios: tipo, sentimiento, churn"
+      });
+    }
+
+    // Llamar al microservicio Recommendations
+    const response = await callInternalService(
+      `${process.env.RECOMMENDATION_SERVICE_HOST}/api/recommendations/generate`,
+      "POST",
+      {
+        tipo,
+        sentimiento,
+        churn,
+        insights
+      }
+    );
+
+    res.json({
+      gateway: "OK",
+      recomendaciones: response.data.recomendaciones,
+      plantilla: response.data.plantilla
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: "Error al llamar al MS-Recommendation-Service",
+      details: error.response?.data || error.message
+    });
+  }
+});
+
+// Ruta protegida: solo usuarios autenticados pueden invocar microservicios
+routerGateway.get("/templates", verifyToken, async (req, res) => {
+  try {
+
+    const response = await callInternalService(
+      `${process.env.RECOMMENDATION_SERVICE_HOST}/api/recommendations/templates`,
+      "GET"
+    );
+
+    res.json({
+      gateway: "OK",
+      fromMicroservice: response.data
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: "Error al llamar al microservicio",
+      details: error.response?.data || error.message
+    });
+  }
+});
+
+// Ruta protegida: solo usuarios autenticados pueden invocar microservicios
+routerGateway.post("/evaluate", verifyToken, async (req, res) => {
+  try {
+    const { recommendationId, efectividad, comentario, usuario } = req.body;
+
+    // Validación básica
+    if (!recommendationId || !efectividad) {
+      return res.status(400).json({
+        success: false,
+        message: "Faltan campos requeridos: recommendationId y efectividad."
+      });
+    }
+
+    // Llamar al microservicio Recommendations
+    const response = await callInternalService(
+      `${process.env.RECOMMENDATION_SERVICE_HOST}/api/recommendations/evaluate`,
+      "POST",
+      {
+        recommendationId,
+        efectividad,
+        comentario,
+        usuario
+      }
+    );
+
+    // Datos de evaluación procesados
+    const evaluacion = {
+      
+    };
+
+    res.json({
+      gateway: "OK",
+      recomendaciones: response.data.recomendaciones,
+      plantilla: response.data.plantilla
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: "Error al llamar al MS-Recommendation-Service",
+      details: error.response?.data || error.message
+    });
+  }
+});
+
 
 // Ruta pública para probar (SIN llamar microservicio todavía)
 routerGateway.post("/tickets/ingresar", verifyToken, recibirTicket);
-
+ 
 export default routerGateway;
