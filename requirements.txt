@@ -1,8 +1,9 @@
 fastapi
 uvicorn
-tensorflow
-numpy
-pandas
-joblib
+pydantic
 pymongo
 python-dotenv
+tensorflow
+pandas
+numpy
+joblib
