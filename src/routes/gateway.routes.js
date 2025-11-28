@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/auth.middleware.js";
 import { callInternalService } from "../utils/internal-call.js"
+import { recibirTicket } from "../controllers/ticket.controller.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const routerGateway = Router();
 
@@ -9,7 +12,7 @@ routerGateway.get("/security", verifyToken, async (req, res) => {
   try {
     
     const response = await callInternalService(
-      "http://localhost:4000",
+      process.env.SECURITY_SERVICE_HOST,
       "GET"
     );
 
@@ -25,5 +28,8 @@ routerGateway.get("/security", verifyToken, async (req, res) => {
     });
   }
 });
+
+// Ruta pública para probar (SIN llamar microservicio todavía)
+routerGateway.post("/tickets/ingresar", verifyToken, recibirTicket);
 
 export default routerGateway;
