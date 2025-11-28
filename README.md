@@ -19,3 +19,17 @@ Pandas / NumPy
 MongoDB
 Joblib
 Docker (próxima integración)
+
+
+🎯 RESUMEN
+| Archivo / Carpeta    | Para qué sirve                             |
+| -------------------- | ------------------------------------------ |
+| **main.py**          | Arranca FastAPI y monta las rutas          |
+| **api/**             | Los endpoints (predict, train, model-info) |
+| **core/**            | Configuración, MongoDB, cargar modelo      |
+| **ml/**              | Modelos, tokenizer y entrenamiento         |
+| **utils/**           | Funciones auxiliares (limpieza de texto)   |
+| **tests/**           | Pruebas del microservicio                  |
+| **requirements.txt** | Librerías necesarias                       |
+| **.gitignore**       | Qué no subir a GitHub                      |
+| **README.md**        | Documentación del microservicio            |

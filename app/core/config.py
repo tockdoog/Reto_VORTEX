@@ -1,3 +1,6 @@
+# Carga variables del .env
+# Guarda MONGO_URI
+
 import os
 from dotenv import load_dotenv
 

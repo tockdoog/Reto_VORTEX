@@ -1,3 +1,7 @@
+# ➡️ La ruta que entrena el modelo
+# Endpoint POST que entrenará la IA
+
+
 from fastapi import APIRouter
 
 router = APIRouter()

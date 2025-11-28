@@ -1,3 +1,7 @@
+# ➡️ La ruta que clasifica un ticket
+# Recibe texto → responde clasificación (correctivo/evolutivo)
+# Ahora es placeholder, luego usará el modelo real
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 
