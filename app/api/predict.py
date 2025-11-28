@@ -1,6 +1,4 @@
-# ➡️ La ruta que clasifica un ticket
-# Recibe texto → responde clasificación (correctivo/evolutivo)
-# Ahora es placeholder, luego usará el modelo real
+# app/api/predict.py
 
 from fastapi import APIRouter
 from pydantic import BaseModel
@@ -16,20 +14,33 @@ class Ticket(BaseModel):
 @router.post("/predict")
 def classify_ticket(ticket: Ticket):
 
+    # 1️ Cargar modelo y tokenizer
     model, tokenizer = load_model_and_tokenizer()
 
+    # 2️ Preprocesar texto
     padded_text = prepare_text(ticket.text)
 
+    # 3️ Hacer predicción
     prediction = float(model.predict(padded_text)[0][0])
     label = "evolutivo" if prediction >= 0.5 else "correctivo"
 
+    # 4️ Resultado base
     result = {
         "label": label,
         "confidence": round(prediction, 4),
         "input_text": ticket.text
     }
 
-    # save_prediction(result)
+    print("➡️ Enviando resultado a Mongo:", result)
 
-    return result
+    # 5️ Guardar en Mongo
+    save_prediction(result)
 
+    # crear una respuesta limpia sin `_id`
+    response = {
+        "label": result["label"],
+        "confidence": result["confidence"],
+        "input_text": result["input_text"]
+    }
+
+    return response
