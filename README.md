@@ -43,27 +43,34 @@ descripcion
 Pero se pueden usar combinaciones (asunto + descripción) si se quiere mejorar el dataset.
 
 🏗️ Arquitectura del Microservicio
-FASTAPI
+Reto_VORTEX/
 │
-├── /api
-│   ├── predict.py → Clasifica texto
-│   ├── train.py → Entrena el modelo (IA)
-│   └── status.py → Healthcheck
+├── app/
+│   ├── api/
+│   │   ├── predict.py
+│   │   ├── train.py
+│   │   └── model_info.py
+│   │
+│   ├── core/
+│   │   ├── config.py
+│   │   ├── model_loader.py
+│   │   └── mongo.py
+│   │
+│   ├── ml/
+│   │   ├── dataset.csv
+│   │   ├── classifier.h5        (se genera después del entrenamiento)
+│   │   └── tokenizer.pkl        (se genera después del entrenamiento)
+│   │
+│   ├── utils/
+│   │   └── preprocess.py
+│   │
+│   └── main.py
 │
-├── /core
-│   ├── config.py → Configuración (paths, MongoDB)
-│   ├── mongo.py → Conexión + guardado en MongoDB
-│   └── model_loader.py → Cargar modelo + tokenizer
-│
-├── /ml
-│   ├── dataset.csv → Dataset base
-│   ├── trainer.py → Entrena y guarda modelo + tokenizer
-│   └── classifier.h5 → Modelo entrenado (se genera)
-│
-├── /utils
-│   └── preprocess.py → Limpieza de texto
-│
-└── main.py → Inicializa FastAPI y monta rutas
+├── requirements.txt
+├── .gitignore
+├── README.md
+└── venv/                  (NO se sube a Git)
+
 
 
 
