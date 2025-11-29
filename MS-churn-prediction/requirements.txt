@@ -1,0 +1,10 @@
+﻿fastapi
+uvicorn
+motor
+dnspython
+pandas
+scikit-learn
+python-dotenv
+requests
+pydantic-settings
+joblib
