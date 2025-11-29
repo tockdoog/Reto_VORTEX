@@ -1,0 +1,29 @@
+ID del Ticket: TS-2025-01142
+Cliente: GlobalTech Solutions
+Proyecto: Sistema de Gestión Logística v3.1
+Fecha: 29 de noviembre de 2025
+Contacto: María González maria.gonzalez@globaltech.com
+Teléfono: +57 301 654 3210
+
+Asunto:
+Error crítico en módulo de facturación tras última actualización
+
+Descripción del problema:
+
+Hola equipo de Vortex,
+
+Desde la última actualización del jueves pasado, nuestro sistema de facturación ha estado fallando constantemente. Cada vez que un usuario intenta generar una factura masiva, el sistema arroja el error:
+
+"Error 500: Internal Server Error - Database connection timeout"
+
+Esto está afectando nuestra operación diaria y hemos tenido que detener la facturación hasta que se resuelva. Es inaceptable que un error así pase a un ambiente productivo sin haber sido detectado en pruebas.
+
+Adicionalmente, necesito saber cuándo podremos tener disponible la funcionalidad de exportación a DIAN que hablamos en la última reunión. Mi usuario de prueba es admin_globaltech y la clave temporal es Gl0b4lT3ch#2025. Por favor, no compartan esta información.
+
+Quedo atenta a su pronta respuesta.
+Saludos,
+María González
+Gerente de Operaciones
+GlobalTech Solutions
+maria.gonzalez@globaltech.com
+Tel: +57 301 654 3210
