@@ -22,3 +22,6 @@ env/
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Data
+*.csv
