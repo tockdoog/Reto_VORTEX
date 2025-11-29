@@ -174,3 +174,10 @@ async def get_daily_stats(
     
     return result
 
+@router.get("/risk-factors/{user_id}")
+async def get_risk_factors(user_id: str):
+    result = await churn_service.get_risk_factors(user_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="No se encontraron factores de riesgo para el usuario")
+    return result
+

@@ -1,4 +1,5 @@
 import Ticket from '../models/ticket.model.js';
+const memoryStore = [];
 
 // Utilidad para formatear respuesta
 const formatResponse = (success, data, message = '') => {
@@ -47,12 +48,32 @@ export const createTicket = async (req, res) => {
       );
     }
 
-    // Verificar si el ticket ya existe
-    const existingTicket = await Ticket.findOne({ ticketId: id });
-    if (existingTicket) {
-      return res.status(409).json(
-        formatResponse(false, null, `El ticket con ID ${id} ya existe`)
-      );
+    const allowNoDb = process.env.ALLOW_NO_DB === 'true';
+    if (allowNoDb) {
+      if (memoryStore.find(t => t.ticketId === id)) {
+        return res.status(409).json(formatResponse(false, null, `El ticket con ID ${id} ya existe (mem)`));
+      }
+      const contactoParseado = parseContacto(contacto);
+      const nuevoTicket = {
+        ticketId: id,
+        cliente,
+        proyecto,
+        fecha,
+        contacto: contactoParseado,
+        telefono,
+        asunto,
+        descripcion,
+        prioridad: determinarPrioridad(asunto, descripcion),
+        categoria: determinarCategoria(asunto, descripcion),
+        fechaCreacion: new Date(),
+        estado: 'nuevo',
+        metadata: {
+          fuente: req.headers['x-fuente'] || 'api',
+          usuarioCreacion: req.headers['x-usuario'] || 'sistema'
+        }
+      };
+      memoryStore.push(nuevoTicket);
+      return res.status(201).json(formatResponse(true, nuevoTicket, 'Ticket creado en memoria'));
     }
 
     // Parsear información de contacto
@@ -115,6 +136,14 @@ export const getTicketById = async (req, res) => {
       );
     }
 
+    const allowNoDb = process.env.ALLOW_NO_DB === 'true';
+    if (allowNoDb) {
+      const ticket = memoryStore.find(t => t.ticketId === id);
+      if (!ticket) {
+        return res.status(404).json(formatResponse(false, null, `Ticket con ID ${id} no encontrado (mem)`));
+      }
+      return res.status(200).json(formatResponse(true, ticket, 'Ticket (mem)'));
+    }
     const ticket = await Ticket.findByTicketId(id);
 
     if (!ticket) {

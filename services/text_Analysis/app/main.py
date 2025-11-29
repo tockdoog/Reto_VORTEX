@@ -1,44 +1,25 @@
-<<<<<<< HEAD
-# app/main.py
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from app.database import mongodb
-from app.models import ClassificationRequest, ClassificationResponse, TrainingRequest, TrainingResponse, ModelInfoResponse
-from app.services.classification_model import ClassificationModel
-from app.services.data_processor import DataProcessor
-import logging
-from datetime import datetime
-=======
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import logging
 
-from app.models import TextAnalysisRequest, VectorizationResponse, SentimentResponse, TokenizationResponse, LinguisticFeatures
+from app.models import TextAnalysisRequest, VectorizationResponse, SentimentResponse, TokenizationResponse, LinguisticFeatures, SecurityResponse
 from app.services.text_vectorizer import TextVectorizer
 from app.services.sentiment_analyzer import SentimentAnalyzer
 from app.services.text_tokenizer import TextTokenizer
 from app.database import mongodb
 from app.config import settings
->>>>>>> Text-Analysis
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-<<<<<<< HEAD
-app = FastAPI(title="MS-Classification-Service", version="1.0.0")
-
-# Configurar CORS
-=======
 app = FastAPI(
     title="MS-Text-Analysis-Service",
     description="Microservicio de análisis de texto para NLP - Vectorización, Sentimiento y Tokenización",
     version="1.0.0"
 )
 
-# CORS
->>>>>>> Text-Analysis
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -47,114 +28,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-<<<<<<< HEAD
-# Instanciar el modelo y procesador de datos
-classification_model = ClassificationModel()
-data_processor = DataProcessor()
-
-@app.on_event("startup")
-async def startup_event():
-    logger.info("🚀 MS-Classification-Service iniciado")
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    logger.info("👋 MS-Classification-Service detenido")
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy", "service": "MS-Classification-Service", "timestamp": datetime.now()}
-
-@app.post("/api/classification/predict", response_model=ClassificationResponse)
-async def predict(request: ClassificationRequest):
-    try:
-        # Si se proporciona texto, debemos convertirlo a vector (aquí asumimos que ya tenemos el vector)
-        # En un caso real, llamaríamos al MS-Text-Analysis para obtener el vector
-        if request.text and not request.vector:
-            # Por ahora, generamos un vector aleatorio para simular
-            # En producción, aquí se haría una petición al MS-Text-Analysis
-            vector = [0.1] * 1000
-        elif request.vector:
-            vector = request.vector
-        else:
-            raise HTTPException(status_code=400, detail="Se debe proporcionar texto o vector")
-
-        # Realizar predicción
-        result = classification_model.predict(vector)
-        
-        # Guardar en base de datos
-        collection = mongodb.get_collection("classification_logs")
-        log_entry = {
-            "ticket_id": request.ticket_id,
-            "text": request.text,
-            "vector_length": len(vector),
-            "prediction": result["prediction"],
-            "confidence": result["confidence"],
-            "model_version": classification_model.model_version,
-            "timestamp": datetime.now()
-        }
-        collection.insert_one(log_entry)
-
-        return ClassificationResponse(
-            prediction=result["prediction"],
-            confidence=result["confidence"],
-            ticket_id=request.ticket_id,
-            model_version=classification_model.model_version
-        )
-    except Exception as e:
-        logger.error(f"Error en predicción: {e}")
-        raise HTTPException(status_code=500, detail=f"Error en predicción: {str(e)}")
-
-@app.post("/api/classification/train", response_model=TrainingResponse)
-async def train(request: TrainingRequest):
-    try:
-        # Cargar datos de entrenamiento
-        df = data_processor.load_training_data("data/training_data.csv")
-        X, y = data_processor.prepare_data(df)
-        
-        # Entrenar el modelo
-        start_time = datetime.now()
-        history = classification_model.train(X, y, epochs=request.epochs, validation_split=request.validation_split)
-        training_time = (datetime.now() - start_time).total_seconds()
-        
-        # Calcular métricas
-        accuracy = history.history['accuracy'][-1]
-        loss = history.history['loss'][-1]
-        
-        return TrainingResponse(
-            status="entrenamiento completado",
-            accuracy=accuracy,
-            loss=loss,
-            training_time=training_time
-        )
-    except Exception as e:
-        logger.error(f"Error en entrenamiento: {e}")
-        raise HTTPException(status_code=500, detail=f"Error en entrenamiento: {str(e)}")
-
-@app.get("/api/classification/model-info", response_model=ModelInfoResponse)
-async def get_model_info():
-    """Endpoint para obtener información del modelo"""
-    try:
-        model_info = classification_model.get_model_info()
-        
-        if not model_info:
-            raise HTTPException(status_code=404, detail="Modelo no disponible")
-        
-        return ModelInfoResponse(
-            model_version=model_info["model_version"],
-            model_architecture={
-                "layers": model_info.get("layers", 0),
-                "trainable_parameters": model_info.get("input_features", 0),
-                "model_type": model_info.get("model_type", "Unknown")
-            },
-            training_history=classification_model.training_history,
-            last_training=datetime.now(),
-            accuracy=classification_model.training_history.get('accuracy', [0.5])[-1] if classification_model.training_history else 0.5
-        )
-        
-    except Exception as e:
-        logger.error(f"Error obteniendo información del modelo: {e}")
-        raise HTTPException(status_code=500, detail=f"Error obteniendo información del modelo: {str(e)}")
-=======
 # Inicializar servicios
 text_vectorizer = TextVectorizer()
 sentiment_analyzer = SentimentAnalyzer()
@@ -262,6 +135,106 @@ async def get_linguistic_features(request: TextAnalysisRequest):
         logger.error(f"Error extrayendo características: {e}")
         raise HTTPException(status_code=500, detail=f"Error extrayendo características: {str(e)}")
 
+@app.post("/api/security/detect-phishing", response_model=SecurityResponse)
+async def detect_phishing(request: TextAnalysisRequest):
+    try:
+        text = request.text
+        threats = []
+        risk = 0
+        patterns = [
+            r"verifique\s+su\s+cuenta",
+            r"actualizaci[óo]n\s+urgente",
+            r"haga\s+click\s+aqu[ií]",
+            r"contrase[ñn]a",
+            r"confirmar\s+(identidad|cuenta)",
+            r"suspendid[ao]",
+            r"iniciar\s+ses[ií]on",
+            r"enlace\s+de\s+verificaci[óo]n",
+            r"tarjeta\s+de\s+cr[eé]dito",
+            r"banco|proveedor|paypal"
+        ]
+        for p in patterns:
+            import re
+            if re.search(p, text, flags=re.IGNORECASE):
+                threats.append(p)
+                risk += 2
+        url_patterns = [r"https?://[\w.-]*", r"\bbit\.ly\b|\btinyurl\.com\b|\bow\.ly\b"]
+        for up in url_patterns:
+            import re
+            if re.search(up, text, flags=re.IGNORECASE):
+                threats.append(up)
+                risk += 2
+        import re
+        emails = re.findall(r"[\w.+-]+@[\w-]+\.[\w.-]+", text)
+        if emails:
+            threats.append("email_presence")
+            risk += 1
+        html_link = re.search(r"<a\s+href=", text, flags=re.IGNORECASE) is not None
+        if html_link:
+            threats.append("html_link")
+            risk += 1
+        is_safe = risk < 3
+        anonymized = re.sub(r"[\w.+-]+@[\w-]+\.[\w.-]+", "[email]", text)
+        anonymized = re.sub(r"https?://[\w./-]*", "[url]", anonymized)
+        try:
+            collection = mongodb.get_collection(settings.TEXT_ANALYSIS_COLLECTION)
+            collection.insert_one({
+                "timestamp": datetime.now(),
+                "action": "security_phishing",
+                "ticket_id": request.ticket_id,
+                "threats": threats,
+                "risk": risk,
+                "anonymized_text": anonymized
+            })
+        except Exception:
+            pass
+        return SecurityResponse(isSafe=is_safe, threatsDetected=threats, anonymizedText=anonymized)
+    except Exception as e:
+        logger.error(f"Error en detección de phishing: {e}")
+        raise HTTPException(status_code=500, detail=f"Error en detección de phishing: {str(e)}")
+
+@app.post("/api/security/anonymize-data")
+async def anonymize_data(request: TextAnalysisRequest):
+    try:
+        import re
+        text = request.text
+        anonymized = re.sub(r"[\w.+-]+@[\w-]+\.[\w.-]+", "[email]", text)
+        anonymized = re.sub(r"https?://[\w./-]*", "[url]", anonymized)
+        anonymized = re.sub(r"\b\+?\d[\d\s-]{7,}\b", "[phone]", anonymized)
+        anonymized = re.sub(r"\b(pass|password|contrase[ñn]a)\s*[:=]\s*\S+", "[credential]", anonymized, flags=re.IGNORECASE)
+        try:
+            collection = mongodb.get_collection(settings.TEXT_ANALYSIS_COLLECTION)
+            collection.insert_one({
+                "timestamp": datetime.now(),
+                "action": "security_anonymize",
+                "ticket_id": request.ticket_id,
+                "anonymized_text": anonymized
+            })
+        except Exception:
+            pass
+        return {"anonymizedText": anonymized}
+    except Exception as e:
+        logger.error(f"Error en anonimización: {e}")
+        raise HTTPException(status_code=500, detail=f"Error en anonimización: {str(e)}")
+
+@app.get("/api/security/threats")
+async def get_threats():
+    try:
+        collection = mongodb.get_collection(settings.TEXT_ANALYSIS_COLLECTION)
+        cursor = collection.find({"action": "security_phishing"}).sort("timestamp", -1).limit(50)
+        items = []
+        for doc in cursor:
+            items.append({
+                "timestamp": doc.get("timestamp"),
+                "ticket_id": doc.get("ticket_id"),
+                "threats": doc.get("threats", []),
+                "risk": doc.get("risk", 0)
+            })
+        return {"items": items}
+    except Exception as e:
+        logger.error(f"Error obteniendo amenazas: {e}")
+        raise HTTPException(status_code=500, detail=f"Error obteniendo amenazas: {str(e)}")
+
 @app.get("/health")
 async def health_check():
     """Health check del servicio"""
@@ -280,4 +253,3 @@ async def health_check():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=settings.PORT)
->>>>>>> Text-Analysis

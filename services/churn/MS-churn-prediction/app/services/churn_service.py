@@ -253,6 +253,20 @@ class ChurnService:
         
         return stats
 
+    async def get_risk_factors(self, user_id: str) -> Optional[dict]:
+        db = get_database()
+        collection = db["churn_predictions"]
+        prediction = await collection.find_one({"user_id": user_id}, sort=[("created_at", -1)])
+        if not prediction:
+            return None
+        return {
+            "user_id": user_id,
+            "risk_factors": prediction.get("risk_factors", []),
+            "churn_probability": prediction.get("churn_probability", 0.0),
+            "risk_level": prediction.get("risk_level", "LOW"),
+            "last_updated": prediction.get("created_at")
+        }
+
 
 # ══════════════════════════════════════════════════════════════
 # Crear instancia global del orquestador

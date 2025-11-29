@@ -18,10 +18,9 @@ app.use(cors());
 
 // Middleware para verificar si la BD está conectada
 app.use((req, res, next) => {
-  if (req.path === '/health') return next(); // Health check siempre disponible
-  
-  // Verificar conexión a MongoDB
-  if (mongoose.connection.readyState !== 1) {
+  if (req.path === '/health') return next();
+  const allowNoDb = process.env.ALLOW_NO_DB === 'true' || (process.env.NODE_ENV || 'development') === 'development';
+  if (!allowNoDb && mongoose.connection.readyState !== 1) {
     return res.status(503).json({
       error: "Servicio de base de datos no disponible",
       message: "La base de datos no está conectada"
