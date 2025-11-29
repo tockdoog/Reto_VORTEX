@@ -1,0 +1,17 @@
+# Entorno virtual
+venv/
+.env
+
+# Archivos de modelo
+*.h5
+*.pkl
+
+# Cache
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Sistemas
+.DS_Store
